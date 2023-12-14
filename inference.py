@@ -44,9 +44,9 @@ def gkern(kernlen=21, nsig=3):
     return kern2d/kern2d.sum()
 
 class InferenceArgumentParser(Tap):
-    segment_id: str ='20230925002745'
-    segment_path:str='./eval_scrolls'
-    model_path:str= 'outputs/vesuvius/pretraining_all/vesuvius-models/valid_20230827161847_0_fr_i3depoch=7.ckpt'
+    segment_id: str ='segment-1'
+    segment_path:str='/content/gdrive/MyDrive/yousef-model/volume/segments'
+    model_path:str= '/content/gdrive/MyDrive/yousef-model/checkpoint/valid_20230827161847_0_fr_i3depoch=7.ckpt'
     out_path:str='./'
     stride: int = 2
     start_idx:int=15
@@ -214,7 +214,7 @@ def read_image_mask(fragment_id,start_idx=18,end_idx=38,rotation=0):
         images=images[:,:,::-1]
     fragment_mask=None
     if os.path.exists(f'{dataset_path}/{fragment_id}/{fragment_id}_mask.png'):
-        fragment_mask=cv2.imread(CFG.comp_dataset_path + f"{dataset_path}/{fragment_id}/{fragment_id}_mask.png", 0)
+        fragment_mask=cv2.imread(f"{dataset_path}/{fragment_id}/{fragment_id}_mask.png", 0)
         fragment_mask = np.pad(fragment_mask, [(0, pad0), (0, pad1)], constant_values=0)
         kernel = np.ones((16,16),np.uint8)
         fragment_mask = cv2.erode(fragment_mask,kernel,iterations = 1)
@@ -576,7 +576,7 @@ def predict_fn(test_loader, model, device, test_xyxys,pred_shape):
     # mask_pred/=mask_pred.max()
     return mask_pred
 
-fragments=os.listdir('./eval_scrolls')
+fragments=os.listdir('/content/gdrive/MyDrive/yousef-model/volume/segments')
 fragment_id=args.segment_id
 
 test_loader,test_xyxz,test_shape,fragment_mask=get_img_splits(fragment_id,args.start_idx,args.start_idx+30,0)
