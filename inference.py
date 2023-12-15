@@ -47,7 +47,7 @@ class InferenceArgumentParser(Tap):
     segment_id: str ='segment-1'
     segment_path:str='/content/gdrive/MyDrive/yousef-model/volume/segments'
     model_path:str= '/content/gdrive/MyDrive/yousef-model/checkpoint/valid_20230827161847_0_fr_i3depoch=7.ckpt'
-    out_path:str='./'
+    out_path:str='/content/gdrive/MyDrive/yousef-model/predictions'
     stride: int = 2
     start_idx:int=15
     workers: int = 25
@@ -118,7 +118,7 @@ class CFG:
     # ============== set dataset path =============
     print('set dataset path')
 
-    outputs_path = f'./outputs/{comp_name}/{exp_name}/'
+    outputs_path = f'/content/gdrive/MyDrive/yousef-model/predictions'
 
     submission_dir = outputs_path + 'submissions/'
     submission_path = submission_dir + f'submission_{exp_name}.csv'
