@@ -58,7 +58,7 @@ class CFG:
     comp_dir_path = '/content/gdrive/MyDrive/yousef-model'
     comp_folder_name = '/content/gdrive/MyDrive/yousef-model'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'/content/gdrive/MyDrive/yousef-model/training'
+    comp_dataset_path = f'/content/gdrive/MyDrive/yousef-model'
     
     exp_name = 'pretraining_all'
 
@@ -91,7 +91,7 @@ class CFG:
     # lr = 1e-4 / warmup_factor
     lr = 2e-5
     # ============== fold =============
-    valid_id = '20230827161847'
+    valid_id = 'valid-1'
 
     # objective_cv = 'binary'  # 'binary', 'multiclass', 'regression'
     metric_direction = 'maximize'  # maximize, 'minimize'
@@ -113,7 +113,7 @@ class CFG:
     # ============== set dataset path =============
     print('set dataset path')
 
-    outputs_path = f'./outputs/{comp_name}/{exp_name}/'
+    outputs_path = f'/content/gdrive/MyDrive/yousef-model'
 
     submission_dir = outputs_path + 'submissions/'
     submission_path = submission_dir + f'submission_{exp_name}.csv'
@@ -253,7 +253,7 @@ def get_train_valid_dataset():
     valid_masks = []
     valid_xyxys = []
 
-    for fragment_id in ['training-1','training-2','training-3','training-4','training-5']:
+    for fragment_id in ['training-1','training-2','training-3','training-4','training-5','valid-1']:
         print('reading ',fragment_id)
         image, mask,fragment_mask = read_image_mask(fragment_id)
         x1_list = list(range(0, image.shape[1]-CFG.tile_size+1, CFG.stride))
@@ -528,7 +528,7 @@ valid_mask_gt = cv2.imread(CFG.comp_dataset_path + f"train_scrolls/{fragment_id}
 pred_shape=valid_mask_gt.shape
 torch.set_float32_matmul_precision('medium')
 
-fragments=['20230522181603','20230702185752']
+fragments=['valid-1','valid-2']
 enc_i,enc,fold=0,'i3d',0
 for fid in fragments:
     CFG.valid_id=fid
