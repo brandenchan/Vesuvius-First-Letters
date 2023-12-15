@@ -55,10 +55,10 @@ class CFG:
     comp_name = 'vesuvius'
 
     # comp_dir_path = './'
-    comp_dir_path = './'
-    comp_folder_name = './'
+    comp_dir_path = '/content/gdrive/MyDrive/yousef-model'
+    comp_folder_name = '/content/gdrive/MyDrive/yousef-model'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'./'
+    comp_dataset_path = f'/content/gdrive/MyDrive/yousef-model/training'
     
     exp_name = 'pretraining_all'
 
@@ -253,7 +253,7 @@ def get_train_valid_dataset():
     valid_masks = []
     valid_xyxys = []
 
-    for fragment_id in ['20230522181603','20230702185752','20230827161847','20230909121925','20230905134255','20230904135535']:
+    for fragment_id in ['training-1','training-2','training-3','training-4','training-5']:
         print('reading ',fragment_id)
         image, mask,fragment_mask = read_image_mask(fragment_id)
         x1_list = list(range(0, image.shape[1]-CFG.tile_size+1, CFG.stride))
