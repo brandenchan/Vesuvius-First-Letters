@@ -55,10 +55,10 @@ class CFG:
     comp_name = 'vesuvius'
 
     # comp_dir_path = './'
-    comp_dir_path = '/content/gdrive/MyDrive/yousef-model'
-    comp_folder_name = '/content/gdrive/MyDrive/yousef-model'
+    comp_dir_path = '/content/gdrive/MyDrive/yousef-model/training/'
+    comp_folder_name = '/content/gdrive/MyDrive/yousef-model/training/'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'/content/gdrive/MyDrive/yousef-model'
+    comp_dataset_path = f'/content/gdrive/MyDrive/yousef-model/training/'
     
     exp_name = 'pretraining_all'
 
