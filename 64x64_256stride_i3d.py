@@ -454,6 +454,8 @@ class RegressionPLModel(pl.LightningModule):
         if torch.isnan(loss1):
             print("Loss nan encountered")
         self.log("train/total_loss", loss1.item(),on_step=True, on_epoch=True, prog_bar=True)
+        
+
         return {"loss": loss1}
 
     def validation_step(self, batch, batch_idx):
@@ -576,7 +578,7 @@ for fid in fragments:
         gradient_clip_val=1.0,
         gradient_clip_algorithm="norm",
 
-        callbacks=[ModelCheckpoint(filename=f'valid_{fid}_{fold}_fr_{enc}'+'{epoch}',dirpath=CFG.model_dir,monitor='train/Arcface_loss',mode='min',save_top_k=CFG.epochs),
+        callbacks=[ModelCheckpoint(filename=f'valid_{fid}_{fold}_fr_{enc}'+'{epoch}',dirpath=CFG.model_dir,monitor='train/total_loss',mode='min',save_top_k=CFG.epochs),
 
                     ],
 
