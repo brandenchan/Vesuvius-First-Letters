@@ -568,7 +568,7 @@ for fid in fragments:
         accelerator="gpu",
         devices=1,
         logger=wandb_logger,
-        default_root_dir="/content/gdrive/MyDrive/yousef-model/training",
+        default_root_dir="/content/gdrive/MyDrive/yousef-model/training/outputs/",
         accumulate_grad_batches=1,
         precision='16-mixed',
         gradient_clip_val=1.0,
