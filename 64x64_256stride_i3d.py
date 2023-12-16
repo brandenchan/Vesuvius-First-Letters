@@ -554,7 +554,9 @@ for fid in fragments:
                                 batch_size=CFG.valid_batch_size,
                                 shuffle=False,
                                 num_workers=CFG.num_workers, pin_memory=True, drop_last=True)
-
+    
+    
+    os.environ['WANDB_DIR'] = '/content/gdrive/MyDrive/modelmain/training/outputs'
     wandb_logger = WandbLogger(project="Vesuvius-Repro",name=run_slug+f'{enc}_finetune',entity='vesuvius-10letters')
     norm=fold==1
     model=RegressionPLModel(enc='i3d',pred_shape=pred_shape,size=CFG.size)
