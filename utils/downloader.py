@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 base_url = "http://dl.ash2txt.org/full-scrolls/Scroll1.volpkg/paths/20230925090314/layers/"
 
 # Directory to save downloaded files
-save_dir = "/content/gdrive/MyDrive/yousef-model/training/train scrolls/training-1/layers"
+save_dir = "/content/gdrive/MyDrive/modelmain/training/train scrolls/training-1/layers"
 os.makedirs(save_dir, exist_ok=True)
 
 # Authentication details

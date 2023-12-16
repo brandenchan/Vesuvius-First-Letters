@@ -55,10 +55,10 @@ class CFG:
     comp_name = 'vesuvius'
 
     # comp_dir_path = './'
-    comp_dir_path = '/content/gdrive/MyDrive/yousef-model/training/'
-    comp_folder_name = '/content/gdrive/MyDrive/yousef-model/training/'
+    comp_dir_path = '/content/gdrive/MyDrive/modelmain/training/'
+    comp_folder_name = '/content/gdrive/MyDrive/modelmain/training/'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'/content/gdrive/MyDrive/yousef-model/training/'
+    comp_dataset_path = f'/content/gdrive/MyDrive/modelmain/training/'
     
     exp_name = 'pretraining_all'
 
@@ -113,7 +113,7 @@ class CFG:
     # ============== set dataset path =============
     print('set dataset path')
 
-    outputs_path = f'/content/gdrive/MyDrive/yousef-model/training/'
+    outputs_path = f'/content/gdrive/MyDrive/modelmain/training/outputs'
 
     submission_dir = outputs_path + 'submissions/'
     submission_path = submission_dir + f'submission_{exp_name}.csv'
@@ -568,7 +568,7 @@ for fid in fragments:
         accelerator="gpu",
         devices=1,
         logger=wandb_logger,
-        default_root_dir="/content/gdrive/MyDrive/yousef-model/training/outputs/",
+        default_root_dir="/content/gdrive/MyDrive/modelmain/training/outputs/",
         accumulate_grad_batches=1,
         precision='16-mixed',
         gradient_clip_val=1.0,

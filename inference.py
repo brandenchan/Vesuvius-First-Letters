@@ -45,9 +45,9 @@ def gkern(kernlen=21, nsig=3):
 
 class InferenceArgumentParser(Tap):
     segment_id: str ='segment-1'
-    segment_path:str='/content/gdrive/MyDrive/yousef-model/volume/segments'
-    model_path:str= '/content/gdrive/MyDrive/yousef-model/checkpoint/valid_20230827161847_0_fr_i3depoch=7.ckpt'
-    out_path:str='/content/gdrive/MyDrive/yousef-model/predictions'
+    segment_path:str='/content/gdrive/MyDrive/modelmain/volume/segments'
+    model_path:str= '/content/gdrive/MyDrive/modelmain/checkpoints/valid_20230827161847_0_fr_i3depoch=7.ckpt'
+    out_path:str='/content/gdrive/MyDrive/modelmain/inference_output'
     stride: int = 2
     start_idx:int=15
     workers: int = 25
@@ -60,10 +60,10 @@ class CFG:
     comp_name = 'vesuvius'
 
     # comp_dir_path = './'
-    comp_dir_path = './'
-    comp_folder_name = './'
+    comp_dir_path = '/content/gdrive/MyDrive/modelmain/'
+    comp_folder_name = '/content/gdrive/MyDrive/modelmain/'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'./'
+    comp_dataset_path = f'/content/gdrive/MyDrive/modelmain/volume/segments'
     
     exp_name = 'pretraining_all'
 
@@ -118,7 +118,7 @@ class CFG:
     # ============== set dataset path =============
     print('set dataset path')
 
-    outputs_path = f'/content/gdrive/MyDrive/yousef-model/predictions'
+    outputs_path = f'/content/gdrive/MyDrive/modelmain/inference_output/{comp_name}/{exp_name}/'
 
     submission_dir = outputs_path + 'submissions/'
     submission_path = submission_dir + f'submission_{exp_name}.csv'
@@ -576,7 +576,7 @@ def predict_fn(test_loader, model, device, test_xyxys,pred_shape):
     # mask_pred/=mask_pred.max()
     return mask_pred
 
-fragments=os.listdir('/content/gdrive/MyDrive/yousef-model/volume/segments')
+fragments=os.listdir('/content/gdrive/MyDrive/modelmain/volume/segments')
 fragment_id=args.segment_id
 
 test_loader,test_xyxz,test_shape,fragment_mask=get_img_splits(fragment_id,args.start_idx,args.start_idx+30,0)
