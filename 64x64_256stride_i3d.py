@@ -453,7 +453,7 @@ class RegressionPLModel(pl.LightningModule):
         loss1 = self.loss_func(outputs, y)
         if torch.isnan(loss1):
             print("Loss nan encountered")
-        self.log("train/Arcface_loss", loss1.item(),on_step=True, on_epoch=True, prog_bar=True)
+        self.log("train/total_loss", loss1.item(),on_step=True, on_epoch=True, prog_bar=True)
         return {"loss": loss1}
     
 
