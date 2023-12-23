@@ -136,7 +136,10 @@ class CustomDatasetTest(Dataset):
         self.transform = transform
         if transform:
             self.images = self.transform_batch(images)
+
+        torch.stack(self.images)
         self.xyxys = torch.from_numpy(xyxys)
+
         if device:
             self.images.to(device)
             self.xyxys.to(device)
