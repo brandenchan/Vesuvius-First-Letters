@@ -525,7 +525,7 @@ if __name__ == "__main__":
         reverse: int = 0
         device: str = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         data_device: str = 'cpu'
-        pin_memory: bool = 1
+        pin_memory: int = 1
 
     args = InferenceArgumentParser().parse_args().as_dict()
     config = Config(**args)
