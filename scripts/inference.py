@@ -368,7 +368,8 @@ def predict_fn(
     for step, (images, xys) in tqdm(enumerate(test_loader), total=len(test_loader)):
         images = images.to(device)
         with torch.no_grad():
-            y_preds = model(images)
+            with torch.autocast(device_type="cuda"):
+                y_preds = model(images)
 
         y_preds = torch.sigmoid(y_preds).to('cpu')
 
