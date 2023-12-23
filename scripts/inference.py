@@ -411,6 +411,7 @@ class Config:
         self.segment_id = segment_id
         self.model_path = model_path
         self.out_path = out_path
+        self.data_device = data_device
 
         # ============== comp exp name =============
         self.device = device
