@@ -141,8 +141,9 @@ class CustomDatasetTest(Dataset):
         self.xyxys = torch.from_numpy(xyxys)
 
         if device:
-            self.images.to(device)
-            self.xyxys.to(device)
+            self.images = self.images.to(device)
+            self.xyxys = self.xyxys.to(device)
+            print(f"Data pushed to {} device")
 
     def transform_batch(self, images):
         print("Applying transform function to dataset.")
