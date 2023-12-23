@@ -5,3 +5,5 @@ wandb/
 outputs/
 10letter_submission/
 *.ipynb
+models
+data
