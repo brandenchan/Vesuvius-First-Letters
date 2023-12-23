@@ -111,6 +111,7 @@ def get_img_splits(
         tile_size=tile_size,
         data_path=data_path
     )
+    pred_shape = (image.shape[0], image.shape[1])
 
     # Get subsections of image and save the coords of subsections in xyxys
     x1_list = list(range(0, image.shape[1]-tile_size+1, stride))
@@ -126,7 +127,7 @@ def get_img_splits(
                 images.append(image[y1:y2, x1:x2])
                 xyxys.append([x1, y1, x2, y2])
 
-    return images, np.stack(xyxys), fragment_mask
+    return images, np.stack(xyxys), fragment_mask, pred_shape
 
 
 class CustomDatasetTest(Dataset):
@@ -363,7 +364,6 @@ def predict_fn(
             y_preds = model(images)
 
         y_preds = torch.sigmoid(y_preds).to('cpu')
-        xys = xys.unsqueeze(0)
 
         for i, (x1, y1, x2, y2) in enumerate(xys):
 
@@ -428,7 +428,7 @@ class Config:
         self.stride = stride
 
         self.train_batch_size = batch_size  # 32
-        self.valid_batch_size = train_batch_size
+        self.valid_batch_size = self.train_batch_size
         self.use_amp = True
 
         self.scheduler = 'GradualWarmupSchedulerV2'
@@ -514,7 +514,7 @@ if __name__ == "__main__":
     args = InferenceArgumentParser().parse_args().as_dict()
     config = Config(**args)
 
-    images, xyxys, fragment_mask = get_img_splits(
+    images, xyxys, fragment_mask, pred_shape = get_img_splits(
         fragment_id=config.segment_id,
         s=config.start_idx,
         e=config.start_idx+30,
@@ -523,10 +523,6 @@ if __name__ == "__main__":
         stride=config.stride,
         data_path=config.data_path
     )
-    test_shape = [
-        images[0].shape[0],
-        images[0].shape[1]
-    ]
 
     transform_list = A.Compose(
         [
@@ -569,7 +565,7 @@ if __name__ == "__main__":
         test_loader=test_loader,
         model=model,
         device=config.device,
-        pred_shape=test_shape,
+        pred_shape=pred_shape,
         size=config.size
     )
 
