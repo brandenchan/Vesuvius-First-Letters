@@ -148,7 +148,7 @@ class CustomDatasetTest(Dataset):
     def transform_batch(self, images):
         print("Applying transform function to dataset.")
         data = []
-        for image in images:
+        for image in tqdm(images):
             curr_image = self.transform(image=image)
             curr_image_data = curr_image["image"].unsqueeze(0)
             data.append(curr_image_data)
@@ -525,7 +525,7 @@ if __name__ == "__main__":
         reverse: int = 0
         device: str = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         data_device: str = 'cpu'
-        pin_memory: str = True
+        pin_memory: bool = 1
 
     args = InferenceArgumentParser().parse_args().as_dict()
     config = Config(**args)
