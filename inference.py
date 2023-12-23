@@ -35,6 +35,9 @@ import gc
 from PIL import Image
 import numpy as np
 import scipy.stats as st
+
+
+
 def gkern(kernlen=21, nsig=3):
     """Returns a 2D Gaussian kernel."""
 
@@ -50,7 +53,7 @@ class InferenceArgumentParser(Tap):
     out_path:str='/content/gdrive/MyDrive/modelmain/inference_output'
     stride: int = 16
     start_idx:int=15
-    workers: int = 25
+    workers: int = os.cpu_count()
     batch_size: int = 512
     size:int=64
     reverse:int=0
@@ -64,7 +67,7 @@ class CFG:
     comp_folder_name = '/content/gdrive/MyDrive/modelmain/'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
     comp_dataset_path = f'/content/gdrive/MyDrive/modelmain/volume/segments'
-    
+
     exp_name = 'pretraining_all'
 
     # ============== pred target =============
@@ -146,7 +149,7 @@ class CFG:
                 A.MotionBlur(),
                 ], p=0.4),
         A.GridDistortion(num_steps=2, distort_limit=0.3, p=0.4),
-        A.CoarseDropout(max_holes=5, max_width=int(size * 0.05), max_height=int(size * 0.05), 
+        A.CoarseDropout(max_holes=5, max_width=int(size * 0.05), max_height=int(size * 0.05),
                         mask_fill_value=0, p=0.5),
         # A.Cutout(max_h_size=int(size * 0.6),
         #          max_w_size=int(size * 0.6), num_holes=1, p=1.0),
@@ -199,7 +202,7 @@ def read_image_mask(fragment_id,start_idx=18,end_idx=38,rotation=0):
     # idxs = range(0, 65)
     dataset_path=args.segment_path
     for i in idxs:
-        
+
         image = cv2.imread(f"{dataset_path}/{fragment_id}/layers/{i:02}.tif", 0)
 
         pad0 = (CFG.tile_size - image.shape[0] % CFG.tile_size)
@@ -267,7 +270,7 @@ def get_train_valid_dataset():
                 y2 = y1 + CFG.tile_size
                 x2 = x1 + CFG.tile_size
                 # xyxys.append((x1, y1, x2, y2))
-        
+
                 if fragment_id == CFG.valid_id:
                     valid_images.append(image[y1:y2, x1:x2])
                     valid_masks.append(mask[y1:y2, x1:x2, None])
@@ -327,7 +330,7 @@ class CustomDataset(Dataset):
                 image = data['image'].unsqueeze(0)
                 label= torch.mul(self.kernel,data['mask'])
                 label = label.mean().type(torch.float32)
-            
+
             return image, label
 class CustomDatasetTest(Dataset):
     def __init__(self, images,xyxys, cfg, transform=None):
@@ -379,7 +382,7 @@ class Decoder(nn.Module):
         mask = self.up(x)
         return mask
 
- 
+
 
 from collections import OrderedDict
 def normalization(x):
@@ -405,7 +408,7 @@ class RegressionPLModel(pl.LightningModule):
         self.loss_func2= smp.losses.SoftBCEWithLogitsLoss(smooth_factor=0.15)
         # self.loss_func=nn.HuberLoss(delta=5.0)
         self.loss_func= lambda x,y:0.5 * self.loss_func1(x,y)+0.5*self.loss_func2(x,y)
-        
+
         # self.backbone = generate_model(model_depth=50, n_input_channels=1,forward_features=True,n_classes=700)
         if self.hparams.enc=='resnet34':
             self.backbone = generate_model(model_depth=34, n_input_channels=1,forward_features=True,n_classes=700)
@@ -448,13 +451,13 @@ class RegressionPLModel(pl.LightningModule):
             conv1_weight = state_dict['conv1.weight']
             state_dict['conv1.weight'] = conv1_weight.sum(dim=1, keepdim=True)
             self.backbone.load_state_dict(state_dict,strict=False)
-        
+
         self.decoder = Decoder(encoder_dims=[x.size(1) for x in self.backbone(torch.rand(1,1,20,256,256))], upscale=1)
 
         if self.hparams.with_norm:
             self.normalization=nn.BatchNorm3d(num_features=1)
 
-            
+
     def forward(self, x):
         if x.ndim==4:
             x=x[:,None]
@@ -463,7 +466,7 @@ class RegressionPLModel(pl.LightningModule):
         feat_maps = self.backbone(x)
         feat_maps_pooled = [torch.mean(f, dim=2) for f in feat_maps]
         pred_mask = self.decoder(feat_maps_pooled)
-        
+
         return pred_mask
 
     def training_step(self, batch, batch_idx):
@@ -490,7 +493,7 @@ class RegressionPLModel(pl.LightningModule):
 
         self.log("val/MSE_loss", loss1.item(),on_step=True, on_epoch=True, prog_bar=True)
         return {"loss": loss1}
-    
+
     def on_validation_epoch_end(self):
         self.mask_pred = np.divide(self.mask_pred, self.mask_count, out=np.zeros_like(self.mask_pred), where=self.mask_count!=0)
         wandb_logger.log_image(key="masks", images=[np.clip(self.mask_pred,0,1)], caption=["probs"])
@@ -501,7 +504,7 @@ class RegressionPLModel(pl.LightningModule):
     def configure_optimizers(self):
 
         optimizer = AdamW(filter(lambda p: p.requires_grad, self.parameters()), lr=CFG.lr)
-    
+
         scheduler = get_scheduler(CFG, optimizer)
         return [optimizer]
 
@@ -539,7 +542,7 @@ def get_scheduler(cfg, optimizer):
 
 def scheduler_step(scheduler, avg_val_loss, epoch):
     scheduler.step(epoch)
-   
+
 def TTA(x:tc.Tensor,model:nn.Module):
     #x.shape=(batch,c,h,w)
     shape=x.shape
@@ -549,7 +552,7 @@ def TTA(x:tc.Tensor,model:nn.Module):
     # x=torch.sigmoid(x)
     # print(x.shape)
     x=x.reshape(4,shape[0],CFG.size//4,CFG.size//4)
-    
+
     x=[tc.rot90(x[i],k=-i,dims=(-2,-1)) for i in range(4)]
     x=tc.stack(x,dim=0)
     return x.mean(0)
@@ -576,16 +579,18 @@ def predict_fn(test_loader, model, device, test_xyxys,pred_shape):
     # mask_pred/=mask_pred.max()
     return mask_pred
 
-fragments=os.listdir('/content/gdrive/MyDrive/modelmain/volume/segments')
-fragment_id=args.segment_id
+if __name__ == "__main__":
 
-test_loader,test_xyxz,test_shape,fragment_mask=get_img_splits(fragment_id,args.start_idx,args.start_idx+30,0)
-model=RegressionPLModel.load_from_checkpoint(args.model_path,strict=False)
-model.cuda()
-model.eval()
-mask_pred= predict_fn(test_loader, model, device, test_xyxz,test_shape)
-mask_pred=np.clip(np.nan_to_num(mask_pred),a_min=0,a_max=1)
-mask_pred/=mask_pred.max()
-mask_pred=(mask_pred*255).astype(np.uint8)
-mask_pred=Image.fromarray(mask_pred)
-mask_pred.save(f'{args.out_path}/{fragment_id}_{args.stride}_{args.start_idx}.png')
+    # fragments=os.listdir('/content/gdrive/MyDrive/modelmain/volume/segments')
+    fragment_id=args.segment_id
+
+    test_loader,test_xyxz,test_shape,fragment_mask=get_img_splits(fragment_id,args.start_idx,args.start_idx+30,0)
+    model=RegressionPLModel.load_from_checkpoint(args.model_path,strict=False)
+    # model.cuda()
+    model.eval()
+    mask_pred= predict_fn(test_loader, model, device, test_xyxz,test_shape)
+    mask_pred=np.clip(np.nan_to_num(mask_pred),a_min=0,a_max=1)
+    mask_pred/=mask_pred.max()
+    mask_pred=(mask_pred*255).astype(np.uint8)
+    mask_pred=Image.fromarray(mask_pred)
+    mask_pred.save(f'{args.out_path}/{fragment_id}_{args.stride}_{args.start_idx}.png')
