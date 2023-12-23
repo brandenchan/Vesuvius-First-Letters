@@ -131,12 +131,15 @@ def get_img_splits(
 
 
 class CustomDatasetTest(Dataset):
-    def __init__(self, images, xyxys, transform=None):
+    def __init__(self, images, xyxys, transform=None, device=None):
         self.images = images
         self.transform = transform
         if transform:
             self.images = self.transform_batch(images)
-        self.xyxys = xyxys
+        self.xyxys = torch.from_numpy(xyxys)
+        if device:
+            self.images.to(device)
+            self.xyxys.to(device)
 
     def transform_batch(self, images):
         print("Applying transform function to dataset.")
@@ -510,6 +513,7 @@ if __name__ == "__main__":
         size: int = 64
         reverse: int = 0
         device: str = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        data_device: str = None
 
     args = InferenceArgumentParser().parse_args().as_dict()
     config = Config(**args)
