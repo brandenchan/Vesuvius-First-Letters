@@ -554,7 +554,7 @@ if __name__ == "__main__":
         shuffle=False,
         num_workers=config.num_workers,
         pin_memory=True,
-        drop_last=False,
+        drop_last=False
     )
 
     # Load Model
