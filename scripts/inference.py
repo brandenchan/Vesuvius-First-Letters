@@ -143,7 +143,7 @@ class CustomDatasetTest(Dataset):
         if device:
             self.images = self.images.to(device)
             self.xyxys = self.xyxys.to(device)
-            print(f"Data pushed to {} device")
+            print(f"Data pushed to {device} device")
 
     def transform_batch(self, images):
         print("Applying transform function to dataset.")
