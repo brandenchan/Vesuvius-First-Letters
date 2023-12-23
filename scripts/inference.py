@@ -400,6 +400,7 @@ class Config:
         model_path,
         out_path,
         device,
+        data_device,
         warmup_factor=10,
         train_batch_size=None,
         *args,
@@ -545,7 +546,8 @@ if __name__ == "__main__":
     test_dataset = CustomDatasetTest(
         images=images,
         xyxys=xyxys,
-        transform=transform_list
+        transform=transform_list,
+        device=config.data_device
     )
 
     test_loader = DataLoader(
