@@ -405,6 +405,7 @@ class Config:
         out_path,
         device,
         data_device,
+        pin_memory,
         warmup_factor=10,
         train_batch_size=None,
         *args,
@@ -419,6 +420,7 @@ class Config:
         if self.data_device == "cuda":
             torch.set_default_device("cuda")
             torch.multiprocessing.set_start_method("spawn")
+        self.pin_memory = pin_memory
 
         # ============== comp exp name =============
         self.device = device
@@ -523,6 +525,7 @@ if __name__ == "__main__":
         reverse: int = 0
         device: str = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         data_device: str = 'cpu'
+        pin_memory: str = True
 
     args = InferenceArgumentParser().parse_args().as_dict()
     config = Config(**args)
@@ -563,7 +566,7 @@ if __name__ == "__main__":
         batch_size=config.valid_batch_size,
         shuffle=False,
         num_workers=config.num_workers,
-        pin_memory=True,
+        pin_memory=config.pin_memory,
         drop_last=False
     )
 
