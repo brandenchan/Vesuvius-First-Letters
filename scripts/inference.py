@@ -416,7 +416,7 @@ class Config:
         self.out_path = out_path
         self.data_device = data_device
         if self.data_device == "cuda":
-            torch.set_default_tensor_type('torch.cuda.FloatTensor')
+            torch.set_default_device("cuda")
             torch.multiprocessing.set_start_method("spawn")
 
         # ============== comp exp name =============
