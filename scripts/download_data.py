@@ -1,7 +1,7 @@
 from vesuvius.downloader import download_segment_files
-from tap import tap
+from tap import Tap
 
-class Arguments(tap):
+class Arguments(Tap):
     segment_id: str
 
 args = Arguments().parse_args().as_dict()
