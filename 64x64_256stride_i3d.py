@@ -76,7 +76,7 @@ class CFG:
     # ============== training cfg =============
     size = 64
     tile_size = 256
-    stride = tile_size // 8
+    stride = tile_size // 4
 
     train_batch_size = 256 # 32
     valid_batch_size = train_batch_size
