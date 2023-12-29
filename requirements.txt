@@ -5,9 +5,9 @@
  warmup_scheduler
  opencv-python
  torch
- numpy==1.25.0
+ numpy
  wandb
  pandas
  tqdm
- matplotlib==3.6.3
+ matplotlib
  pillow
