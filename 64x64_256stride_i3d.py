@@ -114,7 +114,7 @@ class CFG:
     # ============== set dataset path =============
     print('set dataset path')
 
-    outputs_path = f'/content/gdrive/MyDrive/modelmain/training/outputs'
+    outputs_path = f'./data/modelmain/training/outputs'
 
     submission_dir = outputs_path + 'submissions/'
     submission_path = submission_dir + f'submission_{exp_name}.csv'
