@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 
 import wandb
+wandb.init(mode="disabled")
 
 from torch.utils.data import DataLoader
 
@@ -55,10 +56,10 @@ class CFG:
     comp_name = 'vesuvius'
 
     # comp_dir_path = './'
-    comp_dir_path = '/content/gdrive/MyDrive/modelmain/training/'
-    comp_folder_name = '/content/gdrive/MyDrive/modelmain/training/'
+    comp_dir_path = './data/modelmain/training/'
+    comp_folder_name = './data/modelmain/training/'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'/content/gdrive/MyDrive/modelmain/training/'
+    comp_dataset_path = f'./data/modelmain/training/'
     
     exp_name = 'pretraining_all'
 
@@ -83,7 +84,7 @@ class CFG:
 
     scheduler = 'GradualWarmupSchedulerV2'
     # scheduler = 'CosineAnnealingLR'
-    epochs = 30 # 30
+    epochs = 20 # 30
 
     # adamW warmupあり
     warmup_factor = 10
