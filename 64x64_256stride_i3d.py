@@ -56,10 +56,10 @@ class CFG:
     comp_name = 'vesuvius'
 
     # comp_dir_path = './'
-    comp_dir_path = './data/modelmain/training/'
-    comp_folder_name = './data/modelmain/training/'
+    comp_dir_path = './modelmain/training/'
+    comp_folder_name = './modelmain/training/'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'./data/modelmain/training/'
+    comp_dataset_path = f'./modelmain/training/'
     
     exp_name = 'pretraining_all'
 
@@ -114,7 +114,7 @@ class CFG:
     # ============== set dataset path =============
     print('set dataset path')
 
-    outputs_path = f'./data/modelmain/training/outputs'
+    outputs_path = f'./modelmain/training/outputs'
 
     submission_dir = outputs_path + 'submissions/'
     submission_path = submission_dir + f'submission_{exp_name}.csv'
